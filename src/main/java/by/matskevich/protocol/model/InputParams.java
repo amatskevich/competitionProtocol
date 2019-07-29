@@ -1,5 +1,6 @@
 package by.matskevich.protocol.model;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,15 @@ public class InputParams {
     private Integer countCyclePickets;
     private Integer countOrientationPickets;
     private LinkedList<String> ktmPhases;
+    private LinkedHashMap<String, Double> additionalStages;
+
+    public LinkedHashMap<String, Double> getAdditionalStages() {
+        return additionalStages;
+    }
+
+    public void setAdditionalStages(LinkedHashMap<String, Double> additionalStages) {
+        this.additionalStages = additionalStages;
+    }
 
     public LinkedList<String> getKtmPhases() {
         return ktmPhases;

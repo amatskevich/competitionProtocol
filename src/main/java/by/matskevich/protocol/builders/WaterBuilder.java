@@ -8,7 +8,7 @@ import org.apache.poi.ss.util.CellReference;
 
 public class WaterBuilder extends BasisBuilder {
 
-    private static final String SHEET_NAME = "Вода";
+    static final String SHEET_NAME = "Вода";
     private static final int INITIAL_CELL_INDEX = 1;
     private static final int INITIAL_ROW_INDEX = 1;
 
@@ -27,7 +27,7 @@ public class WaterBuilder extends BasisBuilder {
         int rowIndex = INITIAL_ROW_INDEX;
         rowIndex = generateHeader(rowIndex);
         generateData(rowIndex);
-        for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * params.getKtmPhases().size() + 5; i++) {
+        for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 5; i++) {
             sheet.autoSizeColumn(i, true);
         }
     }

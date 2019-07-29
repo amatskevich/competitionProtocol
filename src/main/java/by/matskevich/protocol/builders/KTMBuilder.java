@@ -10,7 +10,7 @@ import java.util.List;
 
 public class KTMBuilder extends BasisBuilder {
 
-    private static final String SHEET_NAME = "КТМ";
+    static final String SHEET_NAME = "КТМ";
     private static final int INITIAL_CELL_INDEX = 1;
     private static final int INITIAL_ROW_INDEX = 1;
 

@@ -5,6 +5,7 @@ import by.matskevich.protocol.service.CreationService;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class Main {
@@ -30,6 +31,11 @@ public class Main {
         ktmPhases.add("костер");
         ktmPhases.add("бревно");
         params.setKtmPhases(ktmPhases);
+        LinkedHashMap<String, Double> stages = new LinkedHashMap<>();
+        stages.put("Волейбол", 0.5);
+        stages.put("Петанг", 0.5);
+        stages.put("Художка", 1.0);
+        params.setAdditionalStages(stages);
         return params;
     }
 }

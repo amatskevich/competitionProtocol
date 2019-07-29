@@ -5,7 +5,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public class CyclingBuilder extends PicketBuilder {
 
-    private static final String SHEET_NAME = "Вело";
+    static final String SHEET_NAME = "Вело";
     private static final int INITIAL_CELL_INDEX = 1;
     private static final int INITIAL_ROW_INDEX = 1;
 
