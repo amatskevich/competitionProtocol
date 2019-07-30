@@ -1,6 +1,7 @@
 package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
+import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
@@ -24,36 +25,22 @@ public class KTMBuilder extends BasisBuilder {
     }
 
     @Override
-    public void build() {
+    public PlacesModel build() {
 
         int rowIndex = INITIAL_ROW_INDEX;
         rowIndex = generateHeader(rowIndex);
-        generateData(rowIndex);
+        final PlacesModel placesModel = generateData(rowIndex);
         for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * params.getKtmPhases().size() + 5; i++) {
             sheet.autoSizeColumn(i, true);
         }
+        return placesModel;
     }
 
-    private void generateData(int rowIndex) {
-
-        int firstMenRow = rowIndex + 2;
-        int lastMenRow = rowIndex + 1 + params.getMenTeams().size();
-        for (String team : params.getMenTeams()) {
-            createDataRow(++rowIndex, team, firstMenRow, lastMenRow);
-        }
-        createDataRow(++rowIndex, null, 0, 0);
-
-        int firstWomenRow = rowIndex + 2;
-        int lastWomenRow = rowIndex + 1 + params.getWomenTeams().size();
-        for (String team : params.getWomenTeams()) {
-            createDataRow(++rowIndex, team, firstWomenRow, lastWomenRow);
-        }
-    }
-
-    private void createDataRow(int rowIndex, String team, int firstRow, int lastRow) {
+    @Override
+    protected String createDataRow(int rowIndex, String team, int firstRow, int lastRow, boolean isMan) {
         final Row row = sheet.createRow(rowIndex);
         if (team == null) {
-            return;
+            return null;
         }
         int cellIndex = INITIAL_CELL_INDEX;
 
@@ -103,6 +90,7 @@ public class KTMBuilder extends BasisBuilder {
                 + "RANK(" + sumTimeCell.getAddress().formatAsString() + ", " + colLetter + firstRow + ':' + colLetter + lastRow + ",1))";
         placeCell.setCellFormula(placeFormula);
         placeCell.setCellStyle(dataStyle);
+        return placeCell.getAddress().formatAsString();
     }
 
     private int generateHeader(int headerRowIndex1) {

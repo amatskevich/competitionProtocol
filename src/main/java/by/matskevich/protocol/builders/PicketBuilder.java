@@ -1,6 +1,7 @@
 package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
+import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
@@ -15,36 +16,26 @@ abstract class PicketBuilder extends BasisBuilder {
     protected abstract int getCountPickets();
 
     @Override
-    public void build() {
+    public PlacesModel build() {
 
         int rowIndex = getInitialRowIndex();
 
         rowIndex = generateHeader(rowIndex);
 
-        generateData(rowIndex);
+        final PlacesModel placesModel = generateData(rowIndex);
 
         for (int i = getInitialCellIndex(); i < getInitialCellIndex() + getCountPickets() + 6; i++) {
             sheet.autoSizeColumn(i, true);
         }
 
+        return placesModel;
     }
 
-    private int generateData(int rowIndex) {
-
-        for(String team : params.getMenTeams()) {
-            createDataRow(++rowIndex, team);
-        }
-        createDataRow(++rowIndex, null);
-        for (String team : params.getWomenTeams()) {
-            createDataRow(++rowIndex, team);
-        }
-        return rowIndex;
-    }
-
-    private void createDataRow(int indexRow, String team) {
+    @Override
+    protected String createDataRow(int indexRow, String team, int firstRow, int lastRow, boolean isMan) {
         final Row row = sheet.createRow(indexRow);
         if (team == null) {
-            return;
+            return null;
         }
         int cellIndex = getInitialCellIndex();
 
@@ -90,6 +81,7 @@ abstract class PicketBuilder extends BasisBuilder {
 //        String placeFormula= "RANK(" + cell6.getAddress().formatAsString() + ", K2:K10, desc))";//todo
 //        cell6.setCellFormula(placeFormula);
         cell6.setCellStyle(dataStyle);
+        return cell6.getAddress().formatAsString();
     }
 
     private int generateHeader(int headerRowIndex1) {

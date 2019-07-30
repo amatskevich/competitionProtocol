@@ -1,6 +1,7 @@
 package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
+import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.*;
 
 abstract class BasisBuilder {
@@ -26,7 +27,29 @@ abstract class BasisBuilder {
 
     abstract String getSheetName();
 
-    public abstract void build();
+    public abstract PlacesModel build();
+
+    protected PlacesModel generateData(int rowIndex) {
+
+        PlacesModel addresses = new PlacesModel(getSheetName());
+        int firstMenRow = rowIndex + 2;
+        int lastMenRow = rowIndex + 1 + params.getMenTeams().size();
+        for (String team : params.getMenTeams()) {
+            final String address = createDataRow(++rowIndex, team, firstMenRow, lastMenRow, true);
+            addresses.putMen(team, address);
+        }
+        createDataRow(++rowIndex, null, 0, 0, true);
+
+        int firstWomenRow = rowIndex + 2;
+        int lastWomenRow = rowIndex + 1 + params.getWomenTeams().size();
+        for (String team : params.getWomenTeams()) {
+            final String address = createDataRow(++rowIndex, team, firstWomenRow, lastWomenRow, false);
+            addresses.putWomen(team, address);
+        }
+        return addresses;
+    }
+
+    protected abstract String createDataRow(int rowIndex, String team, int firstRow, int lastRow, boolean isMan);
 
     private CellStyle generateHeaderStyle() {
         CellStyle cellStyle = wb.createCellStyle();

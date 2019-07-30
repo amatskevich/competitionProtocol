@@ -1,9 +1,10 @@
 package by.matskevich.protocol.builders;
 
+import by.matskevich.protocol.model.AllPlaces;
 import by.matskevich.protocol.model.InputParams;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
+import by.matskevich.protocol.model.PlacesModel;
+import org.apache.poi.common.usermodel.HyperlinkType;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 
@@ -17,8 +18,13 @@ public class FinalBuilder extends BasisBuilder {
     private static final int INITIAL_CELL_INDEX = 1;
     private static final int INITIAL_ROW_INDEX = 1;
 
-    public FinalBuilder(Workbook wb, InputParams params, int indexSheet) {
+    private final AllPlaces allPlaces;
+    private final CreationHelper creationHelper;
+
+    public FinalBuilder(Workbook wb, InputParams params, int indexSheet, AllPlaces allPlaces) {
         super(wb, params, indexSheet);
+        this.allPlaces = allPlaces;
+        this.creationHelper = wb.getCreationHelper();
     }
 
     @Override
@@ -27,7 +33,7 @@ public class FinalBuilder extends BasisBuilder {
     }
 
     @Override
-    public void build() {
+    public PlacesModel build() {
 
         int rowIndex = INITIAL_ROW_INDEX;
         rowIndex = generateHeader(rowIndex);
@@ -35,6 +41,7 @@ public class FinalBuilder extends BasisBuilder {
         for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * params.getAdditionalStages().size() + 7; i++) {
             sheet.autoSizeColumn(i, true);
         }
+        return null;
     }
 
     private int generateHeader(int headerRowIndex1) {
@@ -86,6 +93,7 @@ public class FinalBuilder extends BasisBuilder {
 
         return headerRowIndex2;
     }
+
     private int addStageHeader(String name, Row row1, Row row2, int cellIndex, int headerRowIndex1) {
         final Cell cell = row1.createCell(++cellIndex);
         final int cellIndex2 = cellIndex + 1;
@@ -103,27 +111,12 @@ public class FinalBuilder extends BasisBuilder {
         return cellIndex2;
     }
 
-    private void generateData(int rowIndex) {
-
-        int firstMenRow = rowIndex + 2;
-        int lastMenRow = rowIndex + 1 + params.getMenTeams().size();
-        for (String team : params.getMenTeams()) {
-            createDataRow(++rowIndex, team, firstMenRow, lastMenRow);
-        }
-        createDataRow(++rowIndex, null, 0, 0);
-
-        int firstWomenRow = rowIndex + 2;
-        int lastWomenRow = rowIndex + 1 + params.getWomenTeams().size();
-        for (String team : params.getWomenTeams()) {
-            createDataRow(++rowIndex, team, firstWomenRow, lastWomenRow);
-        }
-    }
-
-    private void createDataRow(int rowIndex, String team, int firstRow, int lastRow) {
+    @Override
+    protected String createDataRow(int rowIndex, String team, int firstRow, int lastRow, boolean isMen) {
 
         final Row row = sheet.createRow(rowIndex);
         if (team == null) {
-            return;
+            return null;
         }
         int cellIndex = INITIAL_CELL_INDEX;
 
@@ -132,15 +125,19 @@ public class FinalBuilder extends BasisBuilder {
         teamCell.setCellStyle(dataStyle);
 
         final Cell cyclingCell = row.createCell(++cellIndex);
+        cyclingCell.setCellFormula(generateLinkAddress(CyclingBuilder.SHEET_NAME, allPlaces.getCyclingPlaces(), team, isMen));
         cyclingCell.setCellStyle(dataStyle);
 
         final Cell ktmCell = row.createCell(++cellIndex);
+        ktmCell.setCellFormula(generateLinkAddress(KTMBuilder.SHEET_NAME, allPlaces.getKtmPlaces(), team, isMen));
         ktmCell.setCellStyle(dataStyle);
 
         final Cell waterCell = row.createCell(++cellIndex);
+        waterCell.setCellFormula(generateLinkAddress(WaterBuilder.SHEET_NAME, allPlaces.getWaterPlaces(), team, isMen));
         waterCell.setCellStyle(dataStyle);
 
         final Cell orientationCell = row.createCell(++cellIndex);
+        orientationCell.setCellFormula(generateLinkAddress(OrientationBuilder.SHEET_NAME, allPlaces.getOrientationPlaces(), team, isMen));
         orientationCell.setCellStyle(dataStyle);
 
         List<String> scoreAddresses = new ArrayList<>();
@@ -172,6 +169,11 @@ public class FinalBuilder extends BasisBuilder {
                 + "RANK(" + finalScoreCell.getAddress().formatAsString() + ", " + colLetter + firstRow + ':' + colLetter + lastRow + ",1))";
         placeCell.setCellFormula(placeFormula);
         placeCell.setCellStyle(dataStyle);
+        return null;
     }
 
+    private String generateLinkAddress(String sheetName, PlacesModel places, String team, boolean isMen) {
+        String address = isMen ? places.getManPlaceAddress(team) : places.getWomanPlaceAddress(team);
+        return "'" + sheetName + "'!" + address;
+    }
 }
