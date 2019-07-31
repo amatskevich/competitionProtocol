@@ -7,7 +7,7 @@ public class CyclingBuilder extends PicketBuilder {
 
     static final String SHEET_NAME = "Вело";
     private static final int INITIAL_CELL_INDEX = 1;
-    private static final int INITIAL_ROW_INDEX = 1;
+    private static final int INITIAL_ROW_INDEX = 3;
 
     public CyclingBuilder(Workbook wb, InputParams params, int indexSheet) {
         super(wb, params, indexSheet);

@@ -3,6 +3,7 @@ package by.matskevich.protocol.builders;
 import by.matskevich.protocol.model.InputParams;
 import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 abstract class BasisBuilder {
 
@@ -82,5 +83,24 @@ abstract class BasisBuilder {
         final DataFormat dataFormat = wb.createDataFormat();
         cellStyle.setDataFormat(dataFormat.getFormat("H:MM:SS;@"));
         return cellStyle;
+    }
+
+    protected void generateTitleCell(int tableRowIndex, int widthTable) {
+        int rowIndex = tableRowIndex - 2;
+        if (rowIndex < 0) {
+            return;
+        }
+        final int cellIndex = 1;
+        final Row row = sheet.createRow(rowIndex);
+        row.setHeight((short) 600);
+        final Cell cell = row.createCell(cellIndex);
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        Font font = wb.createFont();
+        font.setFontHeightInPoints((short) 20);
+        cellStyle.setFont(font);
+        cell.setCellStyle(cellStyle);
+        cell.setCellValue(getSheetName());
+        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellIndex, cellIndex + widthTable));
     }
 }

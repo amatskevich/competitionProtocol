@@ -2,8 +2,11 @@ package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
 import by.matskevich.protocol.model.PlacesModel;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellReference;
 
 abstract class PicketBuilder extends BasisBuilder {
 
@@ -12,13 +15,16 @@ abstract class PicketBuilder extends BasisBuilder {
     }
 
     protected abstract int getInitialCellIndex();
+
     protected abstract int getInitialRowIndex();
+
     protected abstract int getCountPickets();
 
     @Override
     public PlacesModel build() {
 
         int rowIndex = getInitialRowIndex();
+        generateTitleCell(getInitialRowIndex(), 6 + getCountPickets());
 
         rowIndex = generateHeader(rowIndex);
 
@@ -39,12 +45,12 @@ abstract class PicketBuilder extends BasisBuilder {
         }
         int cellIndex = getInitialCellIndex();
 
-        final Cell cell = row.createCell(cellIndex);
-        cell.setCellValue(team);
-        cell.setCellStyle(dataStyle);
+        final Cell teamCell = row.createCell(cellIndex);
+        teamCell.setCellValue(team);
+        teamCell.setCellStyle(dataStyle);
 
-        final Cell cell1 = row.createCell(++cellIndex);
-        cell1.setCellStyle(timeStyle);
+        final Cell startTimeCell = row.createCell(++cellIndex);
+        startTimeCell.setCellStyle(timeStyle);
 
         final int firstPicketIndex = ++cellIndex;
         final int lastPicketIndex = firstPicketIndex + getCountPickets() - 1;
@@ -53,35 +59,42 @@ abstract class PicketBuilder extends BasisBuilder {
             picketCell.setCellStyle(dataStyle);
         }
 
-        final Cell cell3 = row.createCell(cellIndex);
-        cell3.setCellStyle(timeStyle);
+        final Cell finishTimeCell = row.createCell(cellIndex);
+        finishTimeCell.setCellStyle(timeStyle);
 
-        final Cell cell4 = row.createCell(++cellIndex);
-//        cell4.setCellValue("Итоговое время");
-//        cell4.setCellType(CellType.FORMULA);
-        final String startTimeAddress = cell1.getAddress().formatAsString();
-        final String finishTimeAddress = cell3.getAddress().formatAsString();
-        String timeFormula= "IF(ISBLANK(" + startTimeAddress + "),\"\",IF(ISBLANK(" + finishTimeAddress + "),\"\"," + finishTimeAddress + "-" + startTimeAddress + "))";
-        cell4.setCellFormula(timeFormula);
-        cell4.setCellStyle(timeStyle);
+        final Cell resultTimeCell = row.createCell(++cellIndex);
+        final String startTimeAddress = startTimeCell.getAddress().formatAsString();
+        final String finishTimeAddress = finishTimeCell.getAddress().formatAsString();
+        String timeFormula = "IF(ISBLANK(" + startTimeAddress + "),\"\",IF(ISBLANK(" + finishTimeAddress + "),\"\"," + finishTimeAddress + "-" + startTimeAddress + "))";
+        resultTimeCell.setCellFormula(timeFormula);
+        resultTimeCell.setCellStyle(timeStyle);
 
-        final Cell cell5 = row.createCell(++cellIndex);
-//        cell5.setCellValue("Количество пикетов");
-//        cell5.setCellType(CellType.FORMULA);
-        final String shiftAddress = cell.getAddress().formatAsString();
+        final Cell amountOfPicketsCell = row.createCell(++cellIndex);
+        final String teamAddress = teamCell.getAddress().formatAsString();
         final String firstPicketAddress = row.getCell(firstPicketIndex).getAddress().formatAsString();
         final String lastPicketAddress = row.getCell(lastPicketIndex).getAddress().formatAsString();
-        String picketsFormula= "IF(ISBLANK(" + shiftAddress + "),\"\",COUNTA(" + firstPicketAddress + ":" + lastPicketAddress + "))";
-        cell5.setCellFormula(picketsFormula);
-        cell5.setCellStyle(dataStyle);
+        String picketsFormula = "IF(ISBLANK(" + teamAddress + "),\"\",COUNTA(" + firstPicketAddress + ":" + lastPicketAddress + "))";
+        amountOfPicketsCell.setCellFormula(picketsFormula);
+        amountOfPicketsCell.setCellStyle(dataStyle);
 
-        final Cell cell6 = row.createCell(++cellIndex);
-//        cell6.setCellValue("Место");
-//        cell5.setCellType(CellType.FORMULA);
-//        String placeFormula= "RANK(" + cell6.getAddress().formatAsString() + ", K2:K10, desc))";//todo
-//        cell6.setCellFormula(placeFormula);
-        cell6.setCellStyle(dataStyle);
-        return cell6.getAddress().formatAsString();
+        //=COUNTIF(N4:N6,">"&N4)+1+SUMPRODUCT(--(N4:N6=N4),--(M4:M6<M4))
+        final String timeColumn = CellReference.convertNumToColString(resultTimeCell.getColumnIndex());
+        final String timeAddress = resultTimeCell.getAddress().formatAsString();
+        final String picketsAddress = amountOfPicketsCell.getAddress().formatAsString();
+        final String picketsColumn = CellReference.convertNumToColString(amountOfPicketsCell.getColumnIndex());
+        final Cell placeCell = row.createCell(++cellIndex);
+        String placeFormula = "IF(ISBLANK(" + finishTimeCell.getAddress().formatAsString() + "),\"\",COUNTIF("
+                + picketsColumn + firstRow + ":" + picketsColumn + lastRow
+                + ",\">\"&" + picketsAddress
+                + ")+1+SUMPRODUCT(--("
+                + picketsColumn + firstRow + ":" + picketsColumn + lastRow
+                + "=" + picketsAddress
+                + "),--("
+                + timeColumn + firstRow + ":" + timeColumn + lastRow
+                + "<" + timeAddress + ")))";
+        placeCell.setCellFormula(placeFormula);
+        placeCell.setCellStyle(dataStyle);
+        return placeCell.getAddress().formatAsString();
     }
 
     private int generateHeader(int headerRowIndex1) {

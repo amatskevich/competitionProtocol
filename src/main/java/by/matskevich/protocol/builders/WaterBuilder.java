@@ -11,7 +11,7 @@ public class WaterBuilder extends BasisBuilder {
 
     static final String SHEET_NAME = "Вода";
     private static final int INITIAL_CELL_INDEX = 1;
-    private static final int INITIAL_ROW_INDEX = 1;
+    private static final int INITIAL_ROW_INDEX = 3;
 
     public WaterBuilder(Workbook wb, InputParams params, int indexSheet) {
         super(wb, params, indexSheet);
@@ -26,6 +26,7 @@ public class WaterBuilder extends BasisBuilder {
     public PlacesModel build() {
 
         int rowIndex = INITIAL_ROW_INDEX;
+        generateTitleCell(INITIAL_ROW_INDEX, 5);
         rowIndex = generateHeader(rowIndex);
         final PlacesModel placesModel = generateData(rowIndex);
         for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 5; i++) {

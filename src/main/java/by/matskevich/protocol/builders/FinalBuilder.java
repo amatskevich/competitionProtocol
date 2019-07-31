@@ -3,8 +3,10 @@ package by.matskevich.protocol.builders;
 import by.matskevich.protocol.model.AllPlaces;
 import by.matskevich.protocol.model.InputParams;
 import by.matskevich.protocol.model.PlacesModel;
-import org.apache.poi.common.usermodel.HyperlinkType;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 
@@ -16,7 +18,7 @@ public class FinalBuilder extends BasisBuilder {
 
     private static final String SHEET_NAME = "Сводный протокол";
     private static final int INITIAL_CELL_INDEX = 1;
-    private static final int INITIAL_ROW_INDEX = 1;
+    private static final int INITIAL_ROW_INDEX = 3;
 
     private final AllPlaces allPlaces;
     private final CreationHelper creationHelper;
@@ -36,6 +38,7 @@ public class FinalBuilder extends BasisBuilder {
     public PlacesModel build() {
 
         int rowIndex = INITIAL_ROW_INDEX;
+        generateTitleCell(INITIAL_ROW_INDEX, 12);
         rowIndex = generateHeader(rowIndex);
         generateData(rowIndex);
         for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * params.getAdditionalStages().size() + 7; i++) {
