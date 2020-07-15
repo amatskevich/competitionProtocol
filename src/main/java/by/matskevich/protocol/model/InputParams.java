@@ -61,4 +61,15 @@ public class InputParams {
         this.womenTeams = womenTeams;
     }
 
+    @Override
+    public String toString() {
+        return "InputParams{" +
+                "menTeams=" + menTeams +
+                ", womenTeams=" + womenTeams +
+                ", countCyclePickets=" + countCyclePickets +
+                ", countOrientationPickets=" + countOrientationPickets +
+                ", ktmPhases=" + ktmPhases +
+                ", additionalStages=" + additionalStages +
+                '}';
+    }
 }

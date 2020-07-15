@@ -6,14 +6,9 @@ import by.matskevich.protocol.model.InputParams;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class CreationService {
 
-    public void generateProtocol(InputParams params) throws IOException {
-
-        FileOutputStream out = new FileOutputStream("workbook.xlsx");
+    public Workbook generateProtocol(InputParams params) {
         Workbook wb = new XSSFWorkbook();
         int indexSheet = -1;
 
@@ -32,10 +27,6 @@ public class CreationService {
         FinalBuilder finalBuilder = new FinalBuilder(wb, params, ++indexSheet, allPlaces);
         finalBuilder.build();
 
-// write the workbook to the output stream
-// close our file (don't blow out our file handles
-        wb.write(out);
-        out.close();
-
+        return wb;
     }
 }

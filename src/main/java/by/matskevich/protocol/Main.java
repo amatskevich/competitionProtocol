@@ -1,20 +1,16 @@
 package by.matskevich.protocol;
 
-import by.matskevich.protocol.model.InputParams;
-import by.matskevich.protocol.service.CreationService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
-import java.io.File;
-import java.io.IOException;
-
+@EnableAutoConfiguration
+@ComponentScan
+@SpringBootApplication
 public class Main {
 
-    public static void main(String[] args) throws IOException {
-        System.out.println("Start program.");
-        ObjectMapper objectMapper = new ObjectMapper();
-        final InputParams params = objectMapper.readValue(new File("input.json"), InputParams.class);
-        CreationService service = new CreationService();
-        service.generateProtocol(params);
-        System.out.println("Finish program.");
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
     }
 }
