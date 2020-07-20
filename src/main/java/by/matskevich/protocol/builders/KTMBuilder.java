@@ -1,6 +1,7 @@
 package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
+import by.matskevich.protocol.model.KtmContest;
 import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -11,17 +12,11 @@ import java.util.List;
 
 public class KTMBuilder extends BasisBuilder {
 
-    static final String SHEET_NAME = "КТМ";
-    private static final int INITIAL_CELL_INDEX = 1;
-    private static final int INITIAL_ROW_INDEX = 3;
+    private final KtmContest ktmContest;
 
-    public KTMBuilder(Workbook wb, InputParams params, int indexSheet) {
-        super(wb, params, indexSheet);
-    }
-
-    @Override
-    String getSheetName() {
-        return SHEET_NAME;
+    public KTMBuilder(Workbook wb, KtmContest ktmContest, InputParams params, int indexSheet) {
+        super(wb, ktmContest.getName(), params, indexSheet);
+        this.ktmContest = ktmContest;
     }
 
     @Override
@@ -31,7 +26,7 @@ public class KTMBuilder extends BasisBuilder {
         generateTitleCell(INITIAL_ROW_INDEX, 14);
         rowIndex = generateHeader(rowIndex);
         final PlacesModel placesModel = generateData(rowIndex);
-        for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * params.getKtmPhases().size() + 5; i++) {
+        for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 2 * ktmContest.getPhases().size() + 5; i++) {
             sheet.autoSizeColumn(i, true);
         }
         return placesModel;
@@ -55,7 +50,7 @@ public class KTMBuilder extends BasisBuilder {
         List<String> fineAddresses = new ArrayList<>();
         List<String> pauseAddresses = new ArrayList<>();
 
-        for (int i = 0; i < params.getKtmPhases().size(); ++i) {
+        for (int i = 0; i < ktmContest.getPhases().size(); ++i) {
             final Cell fineCell = row.createCell(++cellIndex);
             fineCell.setCellStyle(dataStyle);
             fineAddresses.add(fineCell.getAddress().formatAsString());
@@ -111,7 +106,7 @@ public class KTMBuilder extends BasisBuilder {
         timeStartCell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
-        for (String name : params.getKtmPhases()) {
+        for (String name : ktmContest.getPhases()) {
             cellIndex = addPhase(name, row1, row2, cellIndex, headerRowIndex1);
         }
 

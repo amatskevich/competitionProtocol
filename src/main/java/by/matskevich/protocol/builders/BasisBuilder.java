@@ -7,7 +7,11 @@ import org.apache.poi.ss.util.CellRangeAddress;
 
 abstract class BasisBuilder {
 
+    static final int INITIAL_CELL_INDEX = 1;
+    static final int INITIAL_ROW_INDEX = 3;
+
     protected final Workbook wb;
+    protected final String sheetName;
     protected final InputParams params;
     protected final Sheet sheet;
     protected final CellStyle headerStyle;
@@ -15,24 +19,22 @@ abstract class BasisBuilder {
     protected final CellStyle timeStyle;
 
 
-    public BasisBuilder(Workbook wb, InputParams params, int indexSheet) {
-
+    public BasisBuilder(Workbook wb, String name, InputParams params, int indexSheet) {
         this.wb = wb;
         this.params = params;
         this.sheet = wb.createSheet();
-        wb.setSheetName(indexSheet, getSheetName());
+        this.sheetName = name;
+        wb.setSheetName(indexSheet, sheetName);
         headerStyle = generateHeaderStyle();
         dataStyle = generateDataStyle();
         timeStyle = generateTimeFormat();
     }
 
-    abstract String getSheetName();
-
     public abstract PlacesModel build();
 
     protected PlacesModel generateData(int rowIndex) {
 
-        PlacesModel addresses = new PlacesModel(getSheetName());
+        PlacesModel addresses = new PlacesModel(sheetName);
         int firstMenRow = rowIndex + 2;
         int lastMenRow = rowIndex + 1 + params.getMenTeams().size();
         for (String team : params.getMenTeams()) {
@@ -100,7 +102,7 @@ abstract class BasisBuilder {
         font.setFontHeightInPoints((short) 20);
         cellStyle.setFont(font);
         cell.setCellStyle(cellStyle);
-        cell.setCellValue(getSheetName());
+        cell.setCellValue(sheetName);
         sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellIndex, cellIndex + widthTable));
     }
 }

@@ -1,6 +1,7 @@
 package by.matskevich.protocol.builders;
 
 import by.matskevich.protocol.model.InputParams;
+import by.matskevich.protocol.model.OrientationContest;
 import by.matskevich.protocol.model.PlacesModel;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -8,29 +9,26 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellReference;
 
-abstract class PicketBuilder extends BasisBuilder {
+public class PicketBuilder extends BasisBuilder {
 
-    public PicketBuilder(Workbook wb, InputParams params, int indexSheet) {
-        super(wb, params, indexSheet);
+    private final OrientationContest contest;
+
+    public PicketBuilder(Workbook wb, OrientationContest contest, InputParams params, int indexSheet) {
+        super(wb, contest.getName(), params, indexSheet);
+        this.contest = contest;
     }
-
-    protected abstract int getInitialCellIndex();
-
-    protected abstract int getInitialRowIndex();
-
-    protected abstract int getCountPickets();
 
     @Override
     public PlacesModel build() {
 
-        int rowIndex = getInitialRowIndex();
-        generateTitleCell(getInitialRowIndex(), 6 + getCountPickets());
+        int rowIndex = INITIAL_ROW_INDEX;
+        generateTitleCell(INITIAL_ROW_INDEX, 6 + contest.getCountOfPickets());
 
         rowIndex = generateHeader(rowIndex);
 
         final PlacesModel placesModel = generateData(rowIndex);
 
-        for (int i = getInitialCellIndex(); i < getInitialCellIndex() + getCountPickets() + 6; i++) {
+        for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + contest.getCountOfPickets() + 6; i++) {
             sheet.autoSizeColumn(i, true);
         }
 
@@ -43,7 +41,7 @@ abstract class PicketBuilder extends BasisBuilder {
         if (team == null) {
             return null;
         }
-        int cellIndex = getInitialCellIndex();
+        int cellIndex = INITIAL_CELL_INDEX;
 
         final Cell teamCell = row.createCell(cellIndex);
         teamCell.setCellValue(team);
@@ -53,7 +51,7 @@ abstract class PicketBuilder extends BasisBuilder {
         startTimeCell.setCellStyle(timeStyle);
 
         final int firstPicketIndex = ++cellIndex;
-        final int lastPicketIndex = firstPicketIndex + getCountPickets() - 1;
+        final int lastPicketIndex = firstPicketIndex + contest.getCountOfPickets() - 1;
         for (int indexPicket = 1; cellIndex <= lastPicketIndex; ++cellIndex, ++indexPicket) {
             final Cell picketCell = row.createCell(cellIndex);
             picketCell.setCellStyle(dataStyle);
@@ -101,7 +99,7 @@ abstract class PicketBuilder extends BasisBuilder {
         final int headerRowIndex2 = headerRowIndex1 + 1;
         final Row row1 = sheet.createRow(headerRowIndex1);
         final Row row2 = sheet.createRow(headerRowIndex2);
-        int cellIndex = getInitialCellIndex();
+        int cellIndex = INITIAL_CELL_INDEX;
 
         final Cell cell = row1.createCell(cellIndex);
         cell.setCellValue("Цех");
@@ -116,7 +114,7 @@ abstract class PicketBuilder extends BasisBuilder {
         final Cell cell2 = row1.createCell(++cellIndex);
         cell2.setCellValue("№ пикета");
         cell2.setCellStyle(headerStyle);
-        int lastPicketIndex = cellIndex + getCountPickets() - 1;
+        int lastPicketIndex = cellIndex + contest.getCountOfPickets() - 1;
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex1, cellIndex, lastPicketIndex));
         for (int indexPicket = 1; cellIndex <= lastPicketIndex; ++cellIndex, ++indexPicket) {
             final Cell picketCell = row2.createCell(cellIndex);

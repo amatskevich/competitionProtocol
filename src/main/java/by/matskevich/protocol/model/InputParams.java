@@ -1,6 +1,5 @@
 package by.matskevich.protocol.model;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,42 +7,10 @@ public class InputParams {
 
     private List<String> menTeams;
     private List<String> womenTeams;
-    private Integer countCyclePickets;
-    private Integer countOrientationPickets;
-    private LinkedList<String> ktmPhases;
-    private LinkedHashMap<String, Double> additionalStages;
-
-    public LinkedHashMap<String, Double> getAdditionalStages() {
-        return additionalStages;
-    }
-
-    public void setAdditionalStages(LinkedHashMap<String, Double> additionalStages) {
-        this.additionalStages = additionalStages;
-    }
-
-    public LinkedList<String> getKtmPhases() {
-        return ktmPhases;
-    }
-
-    public void setKtmPhases(LinkedList<String> ktmPhases) {
-        this.ktmPhases = ktmPhases;
-    }
-
-    public Integer getCountOrientationPickets() {
-        return countOrientationPickets;
-    }
-
-    public void setCountOrientationPickets(Integer countOrientationPickets) {
-        this.countOrientationPickets = countOrientationPickets;
-    }
-
-    public Integer getCountCyclePickets() {
-        return countCyclePickets;
-    }
-
-    public void setCountCyclePickets(Integer countCyclePickets) {
-        this.countCyclePickets = countCyclePickets;
-    }
+    private List<OrientationContest> orientationContests;
+    private List<KtmContest> ktmContests;
+    private List<String> waterContest;
+    private LinkedList<SimpleContest> simpleContests;
 
     public List<String> getMenTeams() {
         return menTeams;
@@ -61,15 +28,47 @@ public class InputParams {
         this.womenTeams = womenTeams;
     }
 
+    public List<OrientationContest> getOrientationContests() {
+        return orientationContests;
+    }
+
+    public void setOrientationContests(List<OrientationContest> orientationContests) {
+        this.orientationContests = orientationContests;
+    }
+
+    public List<KtmContest> getKtmContests() {
+        return ktmContests;
+    }
+
+    public void setKtmContests(List<KtmContest> ktmContests) {
+        this.ktmContests = ktmContests;
+    }
+
+    public List<String> getWaterContest() {
+        return waterContest;
+    }
+
+    public void setWaterContest(List<String> waterContest) {
+        this.waterContest = waterContest;
+    }
+
+    public LinkedList<SimpleContest> getSimpleContests() {
+        return simpleContests;
+    }
+
+    public void setSimpleContests(LinkedList<SimpleContest> simpleContests) {
+        this.simpleContests = simpleContests;
+    }
+
     @Override
     public String toString() {
         return "InputParams{" +
                 "menTeams=" + menTeams +
                 ", womenTeams=" + womenTeams +
-                ", countCyclePickets=" + countCyclePickets +
-                ", countOrientationPickets=" + countOrientationPickets +
-                ", ktmPhases=" + ktmPhases +
-                ", additionalStages=" + additionalStages +
+                ", orientationContests=" + orientationContests +
+                ", ktmContests=" + ktmContests +
+                ", waterContest=" + waterContest +
+                ", simpleContests=" + simpleContests +
                 '}';
     }
 }

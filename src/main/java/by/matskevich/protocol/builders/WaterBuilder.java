@@ -9,34 +9,24 @@ import org.apache.poi.ss.util.CellReference;
 
 public class WaterBuilder extends BasisBuilder {
 
-    static final String SHEET_NAME = "Вода";
-    private static final int INITIAL_CELL_INDEX = 1;
-    private static final int INITIAL_ROW_INDEX = 3;
-
-    public WaterBuilder(Workbook wb, InputParams params, int indexSheet) {
-        super(wb, params, indexSheet);
-    }
-
-    @Override
-    String getSheetName() {
-        return SHEET_NAME;
+    public WaterBuilder(Workbook wb, String name, InputParams params, int indexSheet) {
+        super(wb, name, params, indexSheet);
     }
 
     @Override
     public PlacesModel build() {
 
-        int rowIndex = INITIAL_ROW_INDEX;
         generateTitleCell(INITIAL_ROW_INDEX, 5);
-        rowIndex = generateHeader(rowIndex);
-        final PlacesModel placesModel = generateData(rowIndex);
+        generateHeader();
+        final PlacesModel placesModel = generateData(INITIAL_ROW_INDEX);
         for (int i = INITIAL_CELL_INDEX; i < INITIAL_CELL_INDEX + 5; i++) {
             sheet.autoSizeColumn(i, true);
         }
         return placesModel;
     }
 
-    private int generateHeader(int rowIndex) {
-        final Row row1 = sheet.createRow(rowIndex);
+    private void generateHeader() {
+        final Row row1 = sheet.createRow(INITIAL_ROW_INDEX);
         int cellIndex = INITIAL_CELL_INDEX;
 
         final Cell teamCell = row1.createCell(cellIndex);
@@ -48,7 +38,7 @@ public class WaterBuilder extends BasisBuilder {
         timeStartCell.setCellStyle(headerStyle);
 
         final Cell fineTimeCell = row1.createCell(++cellIndex);
-        fineTimeCell.setCellValue("Штрафное время");
+        fineTimeCell.setCellValue("Штрафное\r\nвремя");
         fineTimeCell.setCellStyle(headerStyle);
 
         final Cell sumTimeCell = row1.createCell(++cellIndex);
@@ -58,8 +48,6 @@ public class WaterBuilder extends BasisBuilder {
         final Cell placeCell = row1.createCell(++cellIndex);
         placeCell.setCellValue("Место");
         placeCell.setCellStyle(headerStyle);
-
-        return rowIndex;
     }
 
     @Override

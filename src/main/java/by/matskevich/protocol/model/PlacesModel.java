@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class PlacesModel {
     private final String sheetAddress;
-    private Map<String, String> men = new HashMap<>();
-    private Map<String, String> women = new HashMap<>();
+    private final Map<String, String> men = new HashMap<>();
+    private final Map<String, String> women = new HashMap<>();
 
     public PlacesModel(String sheetAddress) {
         this.sheetAddress = sheetAddress;
