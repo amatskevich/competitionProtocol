@@ -104,11 +104,13 @@ public class PicketBuilder extends BasisBuilder {
         final Cell cell = row1.createCell(cellIndex);
         cell.setCellValue("Цех");
         cell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell cell1 = row1.createCell(++cellIndex);
         cell1.setCellValue("Время старта");
         cell1.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell cell2 = row1.createCell(++cellIndex);
@@ -117,6 +119,7 @@ public class PicketBuilder extends BasisBuilder {
         int lastPicketIndex = cellIndex + contest.getCountOfPickets() - 1;
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex1, cellIndex, lastPicketIndex));
         for (int indexPicket = 1; cellIndex <= lastPicketIndex; ++cellIndex, ++indexPicket) {
+            row1.createCell(cellIndex).setCellStyle(headerStyle);
             final Cell picketCell = row2.createCell(cellIndex);
             picketCell.setCellStyle(headerStyle);
             picketCell.setCellValue(indexPicket);
@@ -125,21 +128,25 @@ public class PicketBuilder extends BasisBuilder {
         final Cell cell3 = row1.createCell(cellIndex);
         cell3.setCellValue("Время финиша");
         cell3.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell cell4 = row1.createCell(++cellIndex);
         cell4.setCellValue("Итоговое время");
         cell4.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell cell5 = row1.createCell(++cellIndex);
         cell5.setCellValue("Количество пикетов");
         cell5.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell cell6 = row1.createCell(++cellIndex);
         cell6.setCellValue("Место");
         cell6.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         return headerRowIndex2;

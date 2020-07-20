@@ -46,12 +46,14 @@ public class FinalBuilder extends BasisBuilder {
         final Cell teamCell = row1.createCell(cellIndex);
         teamCell.setCellValue("Цех");
         teamCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         for (PlacesModel placesModel : allPlaces) {
             final Cell cell = row1.createCell(++cellIndex);
             cell.setCellValue(placesModel.getSheetAddress());
             cell.setCellStyle(headerStyle);
+            row2.createCell(cellIndex).setCellStyle(headerStyle);
             sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
         }
 
@@ -62,11 +64,13 @@ public class FinalBuilder extends BasisBuilder {
         final Cell sumTimeCell = row1.createCell(++cellIndex);
         sumTimeCell.setCellValue("Итоговые\r\nбаллы");
         sumTimeCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell placeCell = row1.createCell(++cellIndex);
         placeCell.setCellValue("Итоговые\r\nместо");
         placeCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         return headerRowIndex2;
@@ -75,6 +79,7 @@ public class FinalBuilder extends BasisBuilder {
     private int addStageHeader(String name, Row row1, Row row2, int cellIndex, int headerRowIndex1) {
         final Cell cell = row1.createCell(++cellIndex);
         final int cellIndex2 = cellIndex + 1;
+        row1.createCell(cellIndex2).setCellStyle(headerStyle);
         cell.setCellValue(name);
         cell.setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex1, cellIndex, cellIndex2));

@@ -99,11 +99,13 @@ public class KTMBuilder extends BasisBuilder {
         final Cell teamCell = row1.createCell(cellIndex);
         teamCell.setCellValue("Цех");
         teamCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell timeStartCell = row1.createCell(++cellIndex);
         timeStartCell.setCellValue("Время старта");
         timeStartCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         for (String name : ktmContest.getPhases()) {
@@ -113,16 +115,19 @@ public class KTMBuilder extends BasisBuilder {
         final Cell timeFinishCell = row1.createCell(++cellIndex);
         timeFinishCell.setCellValue("Время финиша");
         timeFinishCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell sumTimeCell = row1.createCell(++cellIndex);
         sumTimeCell.setCellValue("Итоговое время");
         sumTimeCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         final Cell placeCell = row1.createCell(++cellIndex);
         placeCell.setCellValue("Место");
         placeCell.setCellStyle(headerStyle);
+        row2.createCell(cellIndex).setCellStyle(headerStyle);
         sheet.addMergedRegion(new CellRangeAddress(headerRowIndex1, headerRowIndex2, cellIndex, cellIndex));
 
         return headerRowIndex2;
@@ -142,6 +147,7 @@ public class KTMBuilder extends BasisBuilder {
         final Cell cellRight = row2.createCell(cellIndex2);
         cellRight.setCellValue("Отсечка");
         cellRight.setCellStyle(headerStyle);
+        row1.createCell(cellIndex2).setCellStyle(headerStyle);
         return cellIndex2;
     }
 }
