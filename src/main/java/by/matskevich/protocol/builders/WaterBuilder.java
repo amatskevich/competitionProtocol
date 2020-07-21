@@ -71,7 +71,7 @@ public class WaterBuilder extends BasisBuilder {
         //=IF(ISBLANK(B8),"",C8+D8/86400)
         final Cell sumTimeCell = row.createCell(++cellIndex);
         String formula = "IF(ISBLANK("
-                + teamCell.getAddress().formatAsString()
+                + timeCell.getAddress().formatAsString()
                 + "),\"\","
                 + timeCell.getAddress().formatAsString()
                 + "+"
@@ -82,7 +82,7 @@ public class WaterBuilder extends BasisBuilder {
 
         final Cell placeCell = row.createCell(++cellIndex);
         final String colLetter = CellReference.convertNumToColString(sumTimeCell.getColumnIndex());
-        String placeFormula = "IF(ISBLANK(" + teamCell.getAddress().formatAsString()
+        String placeFormula = "IF(ISBLANK(" + timeCell.getAddress().formatAsString()
                 + "),\"\","
                 + "RANK(" + sumTimeCell.getAddress().formatAsString() + ", " + colLetter + firstRow + ':' + colLetter + lastRow + ",1))";
         placeCell.setCellFormula(placeFormula);
